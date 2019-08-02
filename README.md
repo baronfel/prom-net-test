@@ -1,31 +1,47 @@
-# prometheus_net_example
+# Sample repo to work on prometheus-net issues
 
-A [Giraffe](https://github.com/giraffe-fsharp/Giraffe) web application, which has been created via the `dotnet new giraffe` command.
+## building
 
-## Build and test the application
+`./build.sh` will 
 
-### Windows
+* build and publish the project
+* build the dockerfile for the app
+* start the container
 
-Run the `build.bat` script in order to restore, build and test (if you've selected to include tests) the application:
+## testing
 
-```
-> ./build.bat
-```
+`./test.sh` will
 
-### Linux/macOS
+* fire 100 requests to the running app's metrics endpoint
 
-Run the `build.sh` script in order to restore, build and test (if you've selected to include tests) the application:
+## debugging
 
-```
-$ ./build.sh
-```
+Attach to the container:
 
-## Run the application
-
-After a successful build you can start the web application by executing the following command in your terminal:
-
-```
-dotnet run src/prometheus_net_example
+```shell
+docker exec -it prom-test /bin/bash
 ```
 
-After the application has started visit [http://localhost:5000](http://localhost:5000) in your preferred browser.
+Now you can take dumps easily using `dotnet dump` because in the container the app is always PID 1:
+
+```shell
+dotnet dump collect --process-id 1
+```
+
+And you can analyze the app with `dotnet dump` as well:
+
+```shell
+dotnet dump analyze path/to/core/file
+```
+
+If necessary, you can get symbols for the dump via `dotnet symbol`:
+
+```shell
+dotnet symbol path/to/core/file
+```
+
+And finally you can launch lldb with the libsosplugin.so file already loaded:
+
+```shell
+lldb prometheus-net-example --core path/to/core/file
+```
