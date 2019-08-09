@@ -16,8 +16,9 @@ RUN apt update && apt install lldb -y
 # install dotnet tools for dump and sos
 ENV PATH=$PATH:$HOME/.dotnet/tools
 RUN dotnet tool install -g dotnet-symbol
-RUN dotnet tool install -g dotnet-sos --version 3.0.0-preview7.19365.2 && dotnet sos install
+RUN dotnet tool install -g dotnet-sos --version 3.0.0-preview7.19365.2 && ~/.dotnet/tools/dotnet-sos install
 RUN dotnet tool install -g dotnet-dump --version 3.0.0-preview7.19365.2
+RUN dotnet tool install -g dotnet-trace --version 3.0.0-preview7.19365.2
 
 FROM debug_tools
 

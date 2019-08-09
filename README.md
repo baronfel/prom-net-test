@@ -45,3 +45,20 @@ And finally you can launch lldb with the libsosplugin.so file already loaded:
 ```shell
 lldb prometheus-net-example --core path/to/core/file
 ```
+
+
+## tracing
+
+run the container via the `build.sh` script, but add `/bin/bash` to the end so that you launch into a shell.
+
+Run the app, get the PID, start tracing:
+
+```shell
+./prometheus-net-example >/dev/null & export PROC_ID=$(echo "$!") && ~/.dotnet/tools/dotnet-trace collect --process-id $PROC_ID --format speedscope --output /output/trace
+```
+
+load the `./output/trace.speedscope.json` file via speedscope.
+
+see the single-thread
+
+

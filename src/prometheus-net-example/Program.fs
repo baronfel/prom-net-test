@@ -112,6 +112,11 @@ let configureLogging (builder : ILoggingBuilder) =
 let main _ =
     let contentRoot = Directory.GetCurrentDirectory()
     let webRoot     = Path.Combine(contentRoot, "WebRoot")
+
+    let stats = DotNetRuntime.DotNetRuntimeStatsBuilder.Default().StartCollecting()
+
+    let timeout = new System.Threading.CancellationTokenSource(10000)
+
     WebHostBuilder()
         .UseKestrel()
         .UseContentRoot(contentRoot)
@@ -121,5 +126,8 @@ let main _ =
         .ConfigureServices(configureServices)
         .ConfigureLogging(configureLogging)
         .Build()
-        .Run()
+        .RunAsync(timeout.Token)
+    |> Async.AwaitTask
+    |> Async.RunSynchronously
+    printfn "done"
     0
